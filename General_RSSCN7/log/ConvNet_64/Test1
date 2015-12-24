@@ -1,0 +1,49 @@
+batch_size = 128
+nb_classes = 7
+nb_epoch = 500
+data_augmentation = True
+# shape of the image (SHAPE x SHAPE)
+img_rows, img_cols = 64, 64
+# the CIFAR10 images are RGB
+img_channels = 3
+
+
+# the data, shuffled and split between tran and test sets
+(X_train, y_train), (X_test, y_test) = load_data_split_pickle(dataset=('/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/testvec_64'\
+                                ,'/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/trainvec_64'))
+print('X_train shape:', X_train.shape)
+print('X_test shape:', X_test.shape)
+print('y_train shape:', y_train.shape)
+print('y_test shape:', y_test.shape)
+print(X_train.shape[0], 'train samples')
+print(X_test.shape[0], 'test samples')
+print(y_test)
+
+# convert class vectors to binary class matrices
+Y_train = np_utils.to_categorical(y_train, nb_classes)
+Y_test = np_utils.to_categorical(y_test, nb_classes)
+
+#building CNN model
+print('Building model......')
+
+
+model = Sequential()
+
+model.add(Convolution2D(32, 3, 3, input_shape=(img_channels, img_rows, img_cols)))
+model.add(Lrelu())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Convolution2D(64, 3, 3))
+model.add(Lrelu())
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+
+model.add(Dense(512))
+model.add(Lrelu())
+model.add(Dropout(0.5))
+
+model.add(Dense(nb_classes))
+model.add(Activation('softmax'))
