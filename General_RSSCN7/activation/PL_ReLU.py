@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 from keras import initializations
 from keras.layers.core import Layer, MaskedLayer
-from keras.utils.theano_utils import shared_zeros, shared_ones, sharedX
+#from keras.utils.theano_utils import shared_zeros, shared_ones, sharedX
 import theano.tensor as T
 import numpy as np
 

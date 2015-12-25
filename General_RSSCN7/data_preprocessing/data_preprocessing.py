@@ -14,7 +14,7 @@ def resize_imgs(src_folder,res_folder):
         for img_file in os.listdir(img_folder):
             im_path = src_folder + "/" + img_file
             im = Image.open(im_path)
-            im_resize = im.resize((64,64))
+            im_resize = im.resize((28,28))
             im_resize_path = res_folder + '/' + img_file
             im_resize.save(im_resize_path)
             flag += 1
@@ -45,31 +45,31 @@ def split_imgs(src_folder):
             img_path = tea_path +'/'+ img_file
             im = Image.open(img_path)
             x_size, y_size = im.size
-            if x_size==64 and y_size==64:
+            if x_size==28 and y_size==28:
                 tea_imgs.append((img_path, label))
                 flag += 1
         random.shuffle(tea_imgs)
         if tea_folder=='aGrass':
-            train_set += tea_imgs[0:300]
-            test_set  += tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  += tea_imgs[200:]
         elif tea_folder=='bField':
-            train_set += tea_imgs[0:300]
-            test_set  +=tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  +=tea_imgs[200:]
         elif tea_folder=='cIndustry':
-            train_set += tea_imgs[0:300]
-            test_set  += tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  += tea_imgs[200:]
         elif tea_folder=='dRiverLake':
-            train_set += tea_imgs[0:300]
-            test_set  +=tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  +=tea_imgs[200:]
         elif tea_folder=='eForest':
-            train_set += tea_imgs[0:300]
-            test_set  += tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  += tea_imgs[200:]
         elif tea_folder=='fResident':
-            train_set += tea_imgs[0:300]
-            test_set  +=tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  +=tea_imgs[200:]
         elif tea_folder=='gParking':
-            train_set += tea_imgs[0:300]
-            test_set  += tea_imgs[300:]
+            train_set += tea_imgs[0:200]
+            test_set  += tea_imgs[200:]
         random.shuffle(train_set)
         random.shuffle(test_set)
         sys.stdout.flush()
@@ -147,12 +147,12 @@ def output_data(vector_vars, vector_folder, batch_size=1000):
         file_name = vector_folder + str(n_batch) + '.pkl'
         cPickle_output((batch_x, batch_y), file_name)
 
-"""
+
 #resize image
 
 
-res_folder = '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/UCMerced_LandUse/res'
-src_folder = '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/UCMerced_LandUse/src'
+res_folder = '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/RSSCN7_res'
+src_folder = '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/RSSCN7_src'
 for sub_src_folder in os.listdir(src_folder):
     img_src_path = src_folder + '/' + sub_src_folder
     img_res_path = res_folder + '/' + sub_src_folder
@@ -160,14 +160,14 @@ for sub_src_folder in os.listdir(src_folder):
         os.mkdir(img_res_path)
     print img_src_path
     print img_res_path
-    reConstruct_folder(src_folder=img_src_path, res_folder=img_res_path, res_size=(128, 128))
+    reConstruct_folder(src_folder=img_src_path, res_folder=img_res_path, res_size=(28, 28))
 """
-
+"""
 """
 #generate dataset list
 """
-test_set_file  = "/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/testfile_64"
-train_set_file = "/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/trainfile_64"
+test_set_file  = "/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/testfile_28"
+train_set_file = "/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/trainfile_28"
 test_set, train_set = split_imgs("/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/RSSCN7_res")
 set_to_csv_file(test_set,  test_set_file)
 set_to_csv_file(train_set, train_set_file)
@@ -176,12 +176,12 @@ set_to_csv_file(train_set, train_set_file)
 """
 #vec_imgs
 """
-test_path_and_labels  = read_csv_file("/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/testfile_64")
-train_path_and_labels = read_csv_file("/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/trainfile_64")
+test_path_and_labels  = read_csv_file("/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/testfile_28")
+train_path_and_labels = read_csv_file("/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/datafile/trainfile_28")
 print 'test  img num: %d' % (len(test_path_and_labels))
 print 'train img num: %d' % (len(train_path_and_labels))
-img_size = (3, 128, 128)  # channel, height, width
+img_size = (3, 64, 64)  # channel, height, width
 test_vec  = vec_imgs(test_path_and_labels, img_size)
 train_vec = vec_imgs(train_path_and_labels, img_size)
-output_data(test_vec,  '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/testvec_64')
-output_data(train_vec, '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/RSSCN7/trainvec_64')
+output_data(test_vec,  '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/Rui/General_RSSCN7/data_preprocessing/testvec_28')
+output_data(train_vec, '/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/Rui/General_RSSCN7/data_preprocessing/trainvec_28')

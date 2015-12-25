@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 #load labels.
 labels = []
-file = open('class_name.txt', 'r')
+file = open('classnames.txt', 'r')
 lines = file.readlines()
 for line in lines:
     labels.append(line.strip())
