@@ -6,7 +6,7 @@ import h5py
 # input image dimensions
 img_rows, img_cols = 28, 28
 
-mat = scipy.io.loadmat('/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/NASA/SAT-4_SAT-6/sat-6-full.mat')
+mat = scipy.io.loadmat('/media/dell/cb552bf1-c649-4cca-8aca-3c24afca817b/dell/data/NASA/SAT-4_SAT-6/sat-4-full.mat')
 
 #print('mat', '\n', mat)
 X_train = mat['train_x']
@@ -81,7 +81,7 @@ output.close()
 
 print 'save is done'
 """
-file_name = 'SAT-6_all_RGB.hdf5'
+file_name = 'SAT-4_all_RGB.hdf5'
 print(file_name)
 f = h5py.File(file_name,'w')
 f.create_dataset('X_train',data=X_train)

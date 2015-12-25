@@ -11,14 +11,14 @@ from keras.utils import np_utils, generic_utils
 from keras.optimizers import SGD, Adadelta, Adagrad
 from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
-import h5py
+import  h5py
 import os
 
 import cPickle
 
 data_augmentation = True
 batch_size = 32
-nb_classes = 6
+nb_classes = 4
 nb_epoch = 50
 img_channels = 3
 
@@ -33,7 +33,7 @@ Y_train = cPickle.load(pkl_file)
 X_test = cPickle.load(pkl_file)
 Y_test = cPickle.load(pkl_file)
 """
-file_name = '/home/dell/exs/NASA/data_prepare/SAT-6_all_RGB.hdf5'
+file_name = '/home/dell/exs/NASA/data_prepare/SAT-4_all_RGB.hdf5'
 f = h5py.File(file_name,'r')
 X_train = f['X_train'][:]
 Y_train = f['y_train'][:]
@@ -49,7 +49,8 @@ print(Y_train.shape)
 
 # Y_train = np_utils.to_categorical(y_train, nb_classes)
 # Y_test = np_utils.to_categorical(y_test, nb_classes)
-
+y_test = np_utils.categorical_probas_to_classes(Y_test)
+print(y_test)
 #building CNN model
 print("sat4-lrelu")
 print('Building model......')
@@ -57,7 +58,7 @@ model = Sequential()
 
 model.add(Convolution2D(32, 3, 3, input_shape=(img_channels, img_rows, img_cols)))
 model.add(Lrelu())
-model.add(Convolution2D(32, 3, 3))
+model.add(Convolution2D(32, 3, 3, input_shape=(img_channels, img_rows, img_cols)))
 model.add(Lrelu())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
@@ -149,6 +150,9 @@ else:
 
         testLoss.append(testLo)
         trainLoss.append(trainLoAll/train_flag)
+
+    Pred = model.predict_classes(X_test)
+
 # draw acc loss figure
     p_testAcc, = plt.plot(testAccu, color='blue')
     p_trainAcc, = plt.plot(trainAccu, color='red')
@@ -157,36 +161,36 @@ else:
     plt.legend([p_testAcc, p_trainAcc], ('testAcc', 'trainAcc'), 'best', numpoints=1)
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
-    plt.savefig('/home/dell/exs/NASA/log_records/6classRGBAccu.eps', dpi=128)
-    plt.show()
+    plt.savefig('/home/dell/exs/NASA/log_records/SAT-4_2_RGB_Accu.eps', dpi=128)
+#    plt.show()
     plt.figure()
-
-
     p_testLoss, = plt.plot(testLoss, color='blue')
     p_trainLoss, = plt.plot(trainLoss, color='red')
     plt.xlabel('epochs', fontsize=18)
-    plt.ylabel('Accuracy', fontsize=18)
-    plt.legend([p_testAcc, p_trainAcc], ('testAcc', 'trainAcc'), 'best', numpoints=1)
+    plt.ylabel('Loss', fontsize=18)
+    plt.legend([p_testLoss, p_trainLoss], ('testLoss', 'trainLoss'), 'best', numpoints=1)
     plt.xticks(fontsize=18)
     plt.yticks(fontsize=18)
-    plt.savefig('/home/dell/exs/NASA/log_records/6classRGBLoss.eps', dpi=128)
+    plt.savefig('/home/dell/exs/NASA/log_records/SAT-4_2_RGB_Loss.eps', dpi=128)
+    print("figure saved")
 # save weights
-    model.save_weights('/home/dell/exs/NASA/log_records/6classRGB.hdf5',overwrite=True)
+    model.save_weights('/home/dell/exs/NASA/log_records/SAT-4_2_RGB.hdf5',overwrite=True)
+    print("weights saved")
 
 
 # save class_name.txt and labels.txt to draw confusion matrix
-    Pred = model.predict_classes(X_test)
 
-    labelFile = 'labels.txt'
+
+    labelFile = '/home/dell/exs/NASA/log_records/labels_SAT-4_2.txt'
     f1 = open(labelFile,'w')
     print (Pred)
     print ("Pred length: " + str(len(Pred)))
 
     for i in range(len(Pred)):
-        line = str(Y_test[i]) + ' ' + str(Pred[i]) + '\n'
+        line = str(y_test[i]) + ' ' + str(Pred[i]) + '\n'
         f1.write(line)
     f1.close()
-
+'''
     class_name = 'class_name.txt'
     f2 = open(class_name, 'w')
     names = []
@@ -197,3 +201,15 @@ else:
         line = str(names[i]) +  '\n'
         f2.write(line)
     f2.close()
+'''
+
+'''
+    plt.plot(testAccu,color = 'blue')
+    plt.plot(trainAccu,color = 'red')
+    plt.savefig('/home/dell/exs/NASA/log_records/6classRGBAccu.png', dpi=128)
+    plt.figure()
+    plt.plot(testLoss,color = 'blue')
+    plt.plot(trainLoss,color = 'red')
+    plt.savefig('/home/dell/exs/NASA/log_records/6classRGBLoss.png', dpi=128)
+    model.save_weights('/home/dell/exs/NASA/log_records/6classRGB.hdf5',overwrite=True)
+'''
